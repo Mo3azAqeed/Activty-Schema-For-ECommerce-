@@ -1,0 +1,21 @@
+version: 2
+
+models:
+  - name: int_ecommerce__order_journey_activities
+    description: "Transforms order journey stages (browsing, submission, checkout) into an activity schema with individual timestamped entries per stage."
+    columns:
+      - name: order_id
+        description: "Unique identifier for each order."
+        tests:
+          - not_null
+          - unique
+      - name: activity
+        description: "Stage of the order journey (browsing, submitted, checkout)."
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['browsing', 'submitted', 'checkout']
+      - name: timestamp
+        description: "Timestamp of the specific activity for the order."
+        tests:
+          - not_null

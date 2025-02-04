@@ -1,0 +1,66 @@
+version: 2
+
+models:
+  - name: stg_ecommerce__order_items
+    description: "Detailed information on each item in an order, including statuses and associated timestamps for tracking order progress."
+    columns:
+      - name: order_item_id
+        description: "A unique identifier for each item in an order."
+        data_type: INTEGER
+        tests:
+          - unique  
+          - not_null
+
+      - name: order_id
+        description: "The ID of the order to which this item belongs."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_ecommerce__orders')
+              field: order_id
+              severity: error
+
+      - name: user_id
+        description: "The ID of the user who placed the order."
+        tests:
+          - not_null
+
+      - name: product_id
+        description: "The ID of the product associated with this order item."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_ecommerce__products')
+              field: product_id
+              severity: error
+
+      - name: inventory_item_id
+        description: "The ID of the specific inventory item linked to this order item."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_ecommerce__inventory_items')
+              field: inventory_item_id
+              severity: error
+
+      - name: status
+        description: "The current status of the order item (e.g., pending, shipped, delivered)."
+        tests:
+          - not_null
+
+      - name: created_at
+        description: "Timestamp when the order item was created."
+
+      - name: shipped_at
+        description: "Timestamp when the order item was shipped."
+
+      - name: delivered_at
+        description: "Timestamp when the order item was delivered."
+
+      - name: returned_at
+        description: "Timestamp when the order item was returned, if applicable."
+
+      - name: sale_price
+        description: "The sale price of the item at the time of purchase."
+        tests:
+          - not_null

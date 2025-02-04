@@ -1,0 +1,130 @@
+version: 2
+
+models:
+  - name: stg_ecommerce__orders
+    description: "Table of 1 row per order"
+    columns:
+      - name: order_id
+        description: "Unique identifier for each order"
+        tests:
+          - not_null
+          - unique
+
+      - name: user_id
+        description: "ID of the user who placed the order"
+
+      - name: status
+        description: "Current status of the order"
+        tests:
+          - accepted_values:
+              name: unexpected_order_status  # Naming the test for better error tracking
+              values:
+                - Processing
+                - Cancelled
+                - Shipped
+                - Complete
+                - Returned
+          - not_null:
+              name: order_status_not_specified  # Naming the not_null test for clarity
+
+      - name: created_at
+        description: "Timestamp when the order was created"
+
+      - name: returned_at
+        description: "Timestamp when the order was returned (if applicable)"
+
+      - name: shipped_at
+        description: "Timestamp when the order was shipped"
+
+      - name: delivered_at
+        description: "Timestamp when the order was delivered"
+
+      - name: num_of_item
+        description: "Number of items in the order"
+
+  - name: stg_ecommerce__customers
+    description: "Table of 1 row per customer"
+    columns:
+      - name: id
+        description: "Unique identifier for each customer"
+        tests:
+          - not_null
+          - unique
+version: 2
+
+models:
+  - name: social_media_interactions  
+    description: "This table contains interactions users made on social media related to campaigns."
+    columns:
+      - name: interaction_id
+        description: "The unique ID of the social media interaction."
+        tests:
+          - unique
+          - not_null
+      - name: user_id
+        description: "The ID of the user who made the interaction."
+        tests:
+          - not_null
+      - name: interaction_time
+        description: "The timestamp when the interaction occurred."
+        tests:
+          - not_null
+      - name: campaign_id
+        description: "The ID of the campaign linked to this interaction."
+        tests:
+          - foreign_key:
+              model: ref('campaigns')
+              column: campaign_id 
+              +severity:error
+
+-- To view table description
+SELECT obj_description('staging_schema.social_media_interactions'::regclass, 'pg_class');
+
+-- To view column descriptions
+SELECT 
+    column_name, 
+    col_description('staging_schema.social_media_interactions'::regclass, ordinal_position) AS column_description
+FROM information_schema.columns
+WHERE table_name = 'social_media_interactions';
+
+| column_name     | column_description                         |
+|-----------------|---------------------------------------------|
+| interaction_id  | The unique ID of the social media interaction. |
+| user_id         | The ID of the user who made the interaction. |
+| interaction_time| The timestamp when the interaction occurred.  |
+| campaign_id     | The ID of the campaign linked to this interaction. |
+
+
+
+models:
+  - name: social_media_interactions
+    columns:
+      - name: user_id
+        description: "The ID of the user who made the interaction."
+        tests:
+          - not_null:
+              severity: error  # This will raise an error if any null values are found
+If even one row in the user_id column contains a null value, the test will fail, and because the severity is set to error, dbt will halt and display an error message
+
+Other Severity Levels
+warn: The test will fail, but dbt will continue running models and tests. It will log a warning instead of stopping the process.
+info: The test failure will be logged as informational output but will not affect the run..
+
+
+
+
+
+
+
+version: 2
+
+models:
+  - name: large_table
+    columns:
+      - name: slightly_unreliable_column
+        tests:
+          - unique:
+              config:
+                severity: error
+                error_if: ">1000" --- Here it will give an error if there was  a violation for the tesr in more than 1000 records
+                warn_if: ">10" -- here warn if There was a violation for the test in more than 10 records

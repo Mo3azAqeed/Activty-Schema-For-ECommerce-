@@ -1,0 +1,38 @@
+version: 2
+models:
+  - name: int_ecommerce__users__events
+    description: "This model captures users' behavioral data and serves as a base model for calculating metrics like LTV and Time to Value."
+    columns:
+      - name: user_id
+        description: "Unique identifier for each user."
+        tests:
+          - unique:
+              severity: error
+          - not_null
+
+      - name: signing_up_date
+        description: "The date the user signed up."
+      
+      - name: referral_channel
+        description: "The referral source/channel that brought in the user."
+        tests:
+          - accepted_values:
+              values:
+                - Adwords
+                - Email
+                - Facebook
+                - Organic
+                - YouTube
+
+      - name: engaged_user_at
+        description: "The first engagement date of the user."
+        tests:
+          - dbt_utils.expression_is_true:
+              expression: "engaged_user_at >= signing_up_date"
+              severity: error
+
+      - name: last_seen_at
+        description: "The most recent engagement date of the user."
+      
+      - name: first_payment_at
+        description: "The date of the user's first purchase."

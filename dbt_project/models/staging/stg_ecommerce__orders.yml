@@ -1,0 +1,64 @@
+version: 2
+
+models:
+  - name: stg_ecommerce__orders
+    description: >
+      Table of 1 row per order.
+      This table only records the status of the order without mentioning the ordered items.
+
+    columns:
+      - name: order_id
+        description: "A unique identifier for each order"
+        tests:
+          - unique
+          - not_null
+ 
+
+      - name: user_id
+        description: "The user who made the order"
+        tests:
+          - relationships:
+              to: ref('stg_ecommerce__users')
+              field: user_id
+              severity: error
+
+      - name: status
+        description: "{{ doc('status') }}"
+        tests:
+          - accepted_values:
+              name: unexpected_order_status #Here We name Our test
+              values:
+                - Processing
+                - Cancelled
+                - Shipped
+                - Complete
+                - Returned
+              severity: error
+
+      - name: created_at
+        description: "When the order was created"
+        tests:
+          - not_null
+
+      - name: returned_at
+        description: "When the order was returned"
+        tests:
+          - not_null:
+              where: "status = 'Returned'"
+
+      - name: shipped_at
+        description: "When the order was shipped"
+        tests:
+          - not_null:
+              where: "delivered_at IS NOT NULL OR status = 'Shipped'"
+
+      - name: delivered_at
+        description: "When the order was delivered"
+        tests:
+          - not_null:
+              where: "returned_at IS NOT NULL OR status = 'Complete'"
+
+      - name: num_items_ordered
+        description: "Number of items in the order"
+        tests:
+          - not_null

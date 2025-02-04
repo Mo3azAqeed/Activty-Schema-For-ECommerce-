@@ -1,0 +1,21 @@
+version: 2
+
+models:
+  - name: int_ecommerce__order_activities
+    description: "Generates a timeline of activities for each order based on different stages such as 'Cancelled', 'Shipped', 'Delivered', and 'Returned'."
+    columns:
+      - name: order_id
+        description: "Unique identifier for each order."
+        tests:
+          - not_null
+          
+      - name: activity
+        description: "Activity status of the order (Cancelled, Shipped, Delivered, Returned)."
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Cancelled', 'shipped', 'delivered', 'returned']
+      - name: timestamp
+        description: "Timestamp of when the order reached the specific activity status."
+        tests:
+          - not_null

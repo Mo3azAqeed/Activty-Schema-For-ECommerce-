@@ -1,0 +1,38 @@
+
+# name or the intended use of these models
+name: 'dbt_project'
+version: '1.0.0'
+
+# This setting configures which 
+#"profile" dbt uses for this project.
+profile: 'ecommerce_project'
+
+
+model-paths: ["models"]
+analysis-paths: ["analyses"] 
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+clean-targets:         # directories to be removed by `dbt clean`
+  - "target"
+
+models:
+  dbt_project:
+    staging:
+      +schema: staging        
+      +materialized: table
+      +severity: warn
+    Intermediate:
+      +schema: Intermediate        
+      +materialized: table
+      +severity: warn
+    marts: 
+      +schema: marts        
+      +materialized: table
+      +severity: warn
+    semantic_layer:
+      +schema: semantic 
+      +materialized: view 
+      +severity: error 

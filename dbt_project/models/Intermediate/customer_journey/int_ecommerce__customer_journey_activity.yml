@@ -1,0 +1,38 @@
+version: 2 
+
+models: 
+  - name: int_ecommerce__customer_journey_activity
+    description: >
+      This ephemeral model maps raw event types to descriptive customer activities, forming the foundation for analyzing user interactions across their journey.
+      It ensures a clean and meaningful representation of events like purchases, cart additions, cancellations, and product views, ordered by their timestamp 
+      and session ID. This model is an integral part of building the customer journey.
+
+    columns:
+      - name: user_id
+        description: >
+          A unique identifier for the user performing the activity. Ensures each activity is correctly attributed to a specific user.
+        tests:
+          - not_null
+
+      - name: session_id
+        description: >
+          The session identifier associated with the activity. Represents a single instance of a user interacting with the platform.
+
+      - name: timestamp
+        description: >
+          The exact time the activity occurred. Used to sequence events in the customer journey.
+
+      - name: activity
+        description: >
+          A descriptive label for the type of user activity, derived from the raw event type.
+          Possible values include:
+          - 'Cancel Purchase'
+          - 'Adding to Cart'
+          - 'Making a Purchase'
+          - 'Viewing'
+
+    tests:
+      - assert_row_count_comparison:
+          compare_model: stg_ecommerce__events
+          operator: '<='
+          severity: warn

@@ -1,0 +1,52 @@
+version: 2
+models:
+  - name: stg_ecommerce__events
+    description: "Table to capture user behavior on the website. Each row represents an event that a user triggered during their session."
+    columns:
+      - name: event_id
+        description: "A unique identifier for each event"
+        tests:
+          - not_null
+          - unique
+
+      - name: session_id
+        description: "The unique identifier for the user's session during which the event occurred"
+        tests:
+          - not_null  # Ensures session_id is always provided
+          
+      - name: event_type
+        description: "The type of event, such as page view, click, or purchase"
+        tests:
+          - not_null  # Ensures event_type is always provided
+
+
+      - name: sequence_number
+        description: "A sequence number for the event within the session, indicating the order of events"
+        tests:
+          - not_null  
+          - greater_than:
+              value: 0  
+
+      - name: created_at
+        description: "The timestamp when the event was created"
+        tests:
+          - not_null 
+          - valid_timestamp: 
+              severity: error
+
+      - name: traffic_source
+        description: "The source of traffic that brought the user to the website (e.g., organic, paid search, referral)"
+        tests:
+          - not_null  
+
+
+      - name: uri
+        description: "The URI of the page or resource the user interacted with"
+
+
+      - name: browser
+        description: "The browser used by the user to interact with the website"
+
+
+      - name: user_id
+        description: "The unique identifier of the user who triggered the event"

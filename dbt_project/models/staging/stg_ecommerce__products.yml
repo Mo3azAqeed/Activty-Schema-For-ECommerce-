@@ -1,0 +1,46 @@
+version: 2
+
+models:
+
+  - name: stg_ecommerce__products
+    description: "Shows the available products in our ecommerce store"
+    columns:
+      - name: product_id
+        description: "Unique identifier for each product"
+        quotes: false
+
+      - name: name
+        description: "The name of the product"
+
+      - name: department
+        description: "Whether the item is Menswear or Womenswear"
+        tests:
+          - not_null:
+              severity: error
+          - accepted_values:
+              values:
+                - Women
+                - Men
+              severity: warn
+
+      - name: brand
+        description: "The brand of the product"
+
+      - name: category
+        description: "Category of the product"
+
+      - name: sku
+        description: "Stock Keeping Unit for inventory management"
+
+      - name: cost
+        description: "This is the cost of the product"
+
+
+      - name: retail_price
+        description: "Retail price of the product"
+        tests:
+          - not_null:
+              severity: error
+          - dbt_utils.expression_is_true:
+              expression: "retail_price > cost AND retail_price > 0"
+              severity: error

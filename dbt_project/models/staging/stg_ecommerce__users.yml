@@ -1,0 +1,56 @@
+version: 2
+
+models:
+  - name: stg_ecommerce__users
+    description: "Users data model, containing key details about users."
+    columns:
+      - name: user_id
+        description: "A unique identifier for each user"
+        tests:
+          - unique
+          - not_null
+
+      - name: first_name
+        description: "The first name of the user"
+        tests:
+          - not_null  
+
+      - name: age
+        description: "The age of the user"
+        tests:
+          - not_null  
+          - greater_than:
+              value: 0  
+
+      - name: gender
+        description: "The gender of the user"
+        tests:
+          - accepted_values:
+              values: ["male", "female", "other"]
+              severity: error 
+
+
+      - name: city
+        description: "The city where the user resides"
+        tests:
+          - not_null  
+
+      - name: country
+        description: "The country where the user resides"
+        tests:
+          - not_null  
+
+      - name: traffic_source
+        description: "The source of traffic for the user"
+        tests:
+          - not_null 
+
+
+      - name: signing_up_date
+        description: "The timestamp when the user was created"
+        tests:
+          - not_null  
+          - valid_timestamp: 
+              severity: warn
+    
+

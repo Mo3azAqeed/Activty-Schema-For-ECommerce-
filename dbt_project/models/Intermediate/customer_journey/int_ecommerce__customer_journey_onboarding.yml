@@ -1,0 +1,21 @@
+version: 2 
+models:
+  - name: int_ecommerce__customer_journey_onboarding 
+    description: "A virtual model (ephemeral) That Get The Users Onboarding Date & Traffic Source"
+    columns: 
+      - name: user_id
+        description: "The unique identifier For Each User"
+      
+      - name: traffic_source
+        description: ' The Source Where The USer Came From For Sign up'
+      
+      - name: onborading_date
+        description: " The Date Where The user Sign Up At"
+
+sources: 
+    - name: int_ecommerce__users__events
+
+      
+          
+
+        

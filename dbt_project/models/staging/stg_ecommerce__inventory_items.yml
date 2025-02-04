@@ -1,0 +1,42 @@
+version: 2
+
+models:
+  - name: stg_ecommerce__inventory_items
+    description: "Table of 1 row per inventory items"
+    columns:
+      - name: inventory_item_id
+        description: ""
+
+      - name: created_at
+        description: ""
+
+      - name: product_id
+        description: ""
+
+      - name: product_name
+        description: ""
+
+      - name: product_brand
+        description: ""
+
+      - name: product_category
+        description: ""
+
+      - name: product_department
+        description: ""
+
+      - name: product_sku
+        description: ""
+
+      - name: sold_at
+        description: ""
+
+      - name: cost
+        description: ""
+
+      - name: product_retail_price
+        description: ""
+
+
+
+

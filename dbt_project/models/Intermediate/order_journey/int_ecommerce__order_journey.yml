@@ -1,0 +1,45 @@
+version: 2
+
+models:
+  - name: int_ecommerce__order_journey
+    description: "A virtual model (ephemeral) that connects user browsing activity, order submission, and checkout stages to understand the full customer order journey from interaction to preparation."
+    
+    columns:
+      - name: order_id
+        description: "Unique identifier for each order."
+        tests:
+          - not_null
+
+      - name: browsing
+        description: "The initial browsing date when a user first engaged with the platform before submitting an order."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_ecommerce__events')
+              field: created_at
+              
+      - name: submitted
+        description: "The date and time when the user submitted the order on the platform."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_ecommerce__orders')
+              field: created_at
+              
+      - name: checkout
+        description: "The last recorded date and time for when items were added or updated in the order checkout process."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_ecommerce__order_items')
+              field: created_at
+
+sources:
+  - name: stg_ecommerce__events
+    description: "Stage table containing user event data for ecommerce interactions."
+
+  - name: stg_ecommerce__orders
+    description: "Stage table containing ecommerce order details for tracking submission and status."
+
+  - name: stg_ecommerce__order_items
+    description: "Stage table with details of items in orders, used to record checkout actions."
